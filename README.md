@@ -167,6 +167,77 @@ repath as needed):
 
 ---
 
+## ⭐ Bonus: Use Work IQ from GitHub Copilot CLI (Windows)
+
+Want to chat with **real Work IQ** straight from your terminal? Wire the **Work IQ MCP
+server** into **GitHub Copilot CLI** and ask questions in plain English. This is **optional**
+— only useful for **Path B** (real Work IQ), and you'll still need the tenant prerequisites
+from the Setup Guide.
+
+> **Heads-up:** the Work IQ CLI talks to a **live Microsoft 365 tenant**. For offline
+> building, stick with **Path A** (the local simulator) — no install needed.
+
+**1. Prerequisites (Windows Terminal → PowerShell)**
+
+```powershell
+# Node.js 18+ (provides npx) and GitHub Copilot CLI
+winget install OpenJS.NodeJS.LTS
+npm install -g @github/copilot
+
+# Verify
+node --version
+copilot --version
+```
+
+**2. Install the Work IQ CLI**
+
+```powershell
+# Installs the Work IQ CLI/MCP package globally
+npm install -g @microsoft/workiq@preview
+
+# Sign in to your tenant (opens a browser)
+workiq auth login
+
+# Smoke-test the CLI
+workiq --version
+```
+
+> Prefer not to install globally? You can skip this step — the MCP config below uses
+> `npx`, which fetches the package on demand.
+
+**3. Register the Work IQ MCP server with Copilot CLI**
+
+The fastest way is the interactive command — launch `copilot`, then run:
+
+```text
+/mcp add
+```
+
+…and provide: name `workiq`, command `npx`, args `-y @microsoft/workiq@preview mcp start`.
+
+Or add it manually to `~/.copilot/mcp-config.json` (`%USERPROFILE%\.copilot\mcp-config.json`):
+
+```json
+{
+  "mcpServers": {
+    "workiq": {
+      "command": "npx",
+      "args": ["-y", "@microsoft/workiq@preview", "mcp", "start"]
+    }
+  }
+}
+```
+
+**4. Ask away** — restart Copilot CLI and try:
+
+```text
+What activities am I doing for the AGCO project today?
+```
+
+Run `/mcp` inside Copilot CLI any time to confirm the `workiq` server is connected. 🎉
+
+---
+
 ## Need more detail?
 
 - **The challenges** → `challenge-pack/WorkIQ-Hackathon-Challenge-Pack_14-JUN-2026.pdf`
